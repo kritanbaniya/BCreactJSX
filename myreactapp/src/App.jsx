@@ -6,8 +6,6 @@ function App() {
 
     <>
        <Card></Card>
-       <Card></Card>
-
     </>
   );
 }
