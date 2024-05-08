@@ -22,11 +22,11 @@ function DateRangePicker() {
       <form onSubmit={handleSubmit}>
         <label>
           Start Date:
-          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}min="2000-01-01" max="2023-12-31" />
         </label>
         <label>
           End Date:
-          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} min="2000-01-01" max="2023-12-31" />
         </label>
         <button type="submit">Generate Plot</button>
       </form>
