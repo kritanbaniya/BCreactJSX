@@ -1,36 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
-import DateRangePicker from './DateRangePicker'; // Import the DateRangePicker component
+import Home from './Home';
+import VerticalNav from './VerticalNav'; // Importing VerticalNav component
+import AmazonComponent from './AmazonComponent';
+import NvidiaComponent from './NvidiaComponent';
+import MetaComponent from './MetaComponent';
+import NetflixComponent from './NetflixComponent';
+import AppleComponent from './AppleComponent';
 
-function App() {
-  const [plotData, setPlotData] = useState(null);
-  const [error, setError] = useState(null);
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedCompany: null
+    };
+  }
 
-  // useEffect hook to fetch plot data initially
-  useEffect(() => {
-    fetchData();
-  }, []); // Empty dependency array to run only once on component mount
-
-  // Function to fetch plot data from the Flask backend
-  const fetchData = async (startDate, endDate) => {
-    try {
-      // Adjust the Axios request URL to point to the Flask backend
-      const response = await axios.post('http://localhost:5000/plot', { start_date: startDate, end_date: endDate });
-      setPlotData(response.data);
-    } catch (error) {
-      setError(error.message);
-    }
+  handleCompanyChange = (company) => {
+    this.setState({ selectedCompany: company });
   };
 
-  // Render the DateRangePicker and Plot components
-  return (
-    <div className="App">
-      <DateRangePicker fetchData={fetchData} /> {/* Pass fetchData function as prop */}
-      {error && <div>Error: {error}</div>}
-      {plotData && <Plot data={plotData.data} layout={plotData.layout} />}
-    </div>
-  );
+  render() {
+    const { selectedCompany } = this.state;
+    return (
+      <div>
+        <VerticalNav /> {/* Rendering VerticalNav component */}
+        <Home />
+        <div>
+          <h2>Companies Stock</h2>
+          <select onChange={(e) => this.handleCompanyChange(e.target.value)}>
+            <option value="">Select a company</option>
+            <option value="Amazon">Amazon</option>
+            <option value="Nvidia">Nvidia</option>
+            <option value="Meta">Meta</option>
+            <option value="Netflix">Netflix</option>
+            <option value="Apple">Apple</option>
+          </select>
+          {selectedCompany && (
+            <>
+              {selectedCompany === 'Amazon' && <AmazonComponent />}
+              {selectedCompany === 'Nvidia' && <NvidiaComponent />}
+              {selectedCompany === 'Meta' && <MetaComponent />}
+              {selectedCompany === 'Netflix' && <NetflixComponent />}
+              {selectedCompany === 'Apple' && <AppleComponent />}
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
+

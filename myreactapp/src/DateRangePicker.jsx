@@ -6,16 +6,23 @@ function DateRangePicker() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [plotData, setPlotData] = useState(null);
+  const [newsData, setNewsData] = useState([]); // Added newsData state
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/plot', { start_date: startDate, end_date: endDate });
-      setPlotData(response.data);
+      // Fetch plot data
+      const plotResponse = await axios.post('http://localhost:5000/plot', { start_date: startDate, end_date: endDate });
+      setPlotData(plotResponse.data);
+
+      // Fetch news data
+      const newsResponse = await axios.post('http://localhost:5000/api/nvda', { start_date: startDate, end_date: endDate });
+      setNewsData(newsResponse.data);
     } catch (error) {
-      console.error('Error fetching plot data:', error);
+      console.error('Error fetching data:', error);
     }
   };
+
 
   return (
     <div>
@@ -31,6 +38,18 @@ function DateRangePicker() {
         <button type="submit">Generate Plot</button>
       </form>
       {plotData && <Plot data={plotData.data} layout={plotData.layout} />}
+      {newsData && (
+        <div>
+          <h2>News Data</h2>
+          <ul>
+            {newsData.map((item, index) => (
+              <li key={index}>
+                <a href={item.url} target="_blank" rel="noopener noreferrer">{item.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

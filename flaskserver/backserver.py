@@ -7,7 +7,7 @@ import plotly.express as px
 
 
 app = Flask(__name__)
-CORS(app) ###, origins=['http://localhost:5173'])
+CORS(app) ##, origins=['http://localhost:5173'])
   # Add this line to enable CORS for all routes
 
 def convert_np_arrays_to_lists(data):
@@ -21,9 +21,9 @@ def convert_np_arrays_to_lists(data):
         return data
 
 
-def generate_plot(start_date, end_date):
+def generate_plot(start_date, end_date, stockfile):
     # Read data from CSV file
-    df = pd.read_csv('flaskserver/NVDA99.csv')
+    df = pd.read_csv(f'flaskserver/{stockfile}.csv')
     
     # Data preprocessing
     df = df.drop_duplicates()
@@ -52,7 +52,7 @@ def plot():
     # Return plot data as JSON response
     
     # Generate the Plotly graph
-    fig = generate_plot(start_date, end_date)
+    fig = generate_plot(start_date, end_date, stockfile = 'NVDA99')
     
     # Convert NumPy arrays to lists in the entire figure data
     fig_data_converted = convert_np_arrays_to_lists(fig.to_dict())
